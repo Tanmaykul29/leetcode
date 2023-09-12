@@ -1,0 +1,53 @@
+class Solution {
+public:
+    string simplifyPath(string path) {
+        stack<string>stk;
+        int i=0;
+        while(i<path.size())
+        {
+            if(isalpha(path[i])){
+                string tmp="";
+                while(isalpha(path[i]) || path[i]=='.' || path[i]=='_'||isdigit(path[i]) ){
+                    tmp+=path[i];
+                    i+=1;
+                }
+                stk.push(tmp);
+            }
+            else if(path[i]=='.' && (i+1>=path.size() || (i+1<path.size() && path[i+1]=='/')))
+                i+=1;
+            else if(path[i]=='.' && i+1<path.size() && path[i+1]=='.' && (i+2>=path.size() || (i+2<path.size() && path[i+2]=='/'))){
+                int cnt=0;
+                while(path[i]=='.' && i+1<path.size() && path[i+1]=='.' && (i+2>=path.size() || (i+2<path.size() && path[i+2]=='/'))){
+                    i+=2;
+                    cnt+=1;
+                }
+                while(!stk.empty() && cnt>0){
+                    cnt-=1;
+                    stk.pop();
+                }
+            }
+            else if(isalpha(path[i]) ||path[i]=='.' ||path[i]=='_'||isdigit(path[i])){
+                string tmp="";
+                while(isalpha(path[i]) ||path[i]=='.' ||path[i]=='_'||(isdigit(path[i]))){
+                    tmp+=path[i];
+                    i+=1;
+                }
+                stk.push(tmp);
+            }
+            else{
+                i+=1;
+            }
+        }
+        string res="";
+        while(!stk.empty()){
+            string tt=stk.top();
+            reverse(tt.begin(),tt.end());
+            res+=tt;
+            stk.pop();
+            res+="/";
+        }
+        if(res.size()==0) return "/";
+        reverse(res.begin(),res.end());
+        return res;
+    }
+};
